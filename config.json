@@ -1,0 +1,34 @@
+{
+  "global": {
+    "qaRepo": "",
+    "releaseRepo": "",
+    "imageVersion": "1.0.0",
+    "chromeBaseImage": "selenium/standalone-chrome-debug",
+    "firefoxBaseImage": "selenium/standalone-firefox-debug",
+    "releaseBrowser": "chrome",
+    "releaseOn": "all",
+    "executeWithSudo": true,
+    "onlyDebug": true,
+    "browserDockerFilePath": ""
+  },
+  "chrome": [
+    {
+      "imageName": "chrome-83",
+      "baseVersion": "3.141.59-20200525"
+    },
+    {
+      "imageName": "chrome-81",
+      "baseVersion": "3.141.59-20200515"
+    },
+    {
+      "imageName": "chrome-80",
+      "baseVersion": "3.141.59-20200326"
+    }
+  ],
+  "firefox": [
+    {
+      "imageName": "firefox-68",
+      "baseVersion": "3.141.59-titanium"
+    }
+  ]
+}
