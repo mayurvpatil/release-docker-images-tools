@@ -23,6 +23,9 @@ if config["global"]["executeWithSudo"]:
 else:
     docker_command = path + "docker "
 
+# clean older log file
+open("releaseCompletion.log", 'w').close()
+
 
 print("")
 print("---------------- Config Parameters ------------------")
@@ -98,7 +101,12 @@ for browser in browser_data:
             for rel in release_data:
                 if releaseOn == rel or releaseOn == "all":
                     docker_push(rel, image_id, name)
-                    print("----------------------- Image Pushed --------------------------")
+                    print("-------------" + name + " :  Image Pushed ------------")
+                    
+                    releaseLog = open("releaseCompletion.log", "a+")
+                    releaseLog.write("Browser : " + name + " , Repo : " + rel + "\n")
+                    releaseLog.close() 
+
 
             # Clean docker images
             execute_shell_command(docker_command + " system prune --all --force")
