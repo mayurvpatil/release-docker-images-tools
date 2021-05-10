@@ -45,8 +45,10 @@ def execute_shell_command(command):
     if not config["global"]["onlyDebug"]:
         return os.system(command)
 
+def fetch_image_id(name):
+    return "$(" + docker_command + "images " + name + ":" + image_version + " --format {{.ID}})"
 
-def docker_push(release_name, image_id, name):
+def docker_push(release_name, name):
 
     if release_name == "release":
         repo = release_repo
@@ -59,19 +61,10 @@ def docker_push(release_name, image_id, name):
     artifactory_path = repo + "/" + name + ":" + image_version
 
     # Attach TAG
-    execute_shell_command(docker_command + "tag " + image_id + " " + artifactory_path)
+    execute_shell_command(docker_command + "tag " + fetch_image_id(name) + " " + artifactory_path)
 
     # Push image
     execute_shell_command(docker_command + "push " + artifactory_path)
-
-
-def fetch_image_id(name):
-
-    image_id = execute_shell_command(docker_command + "images " + name + ":" + image_version + ' --format "{{.ID}}"')
-    if image_id:
-        return image_id
-    else:
-        return "image_id"
 
 
 def generate_build_command(name, version, base):
@@ -96,11 +89,9 @@ for browser in browser_data:
 
             execute_shell_command(generate_build_command(name, version, browser))
 
-            image_id = fetch_image_id(name)
-
             for rel in release_data:
                 if releaseOn == rel or releaseOn == "all":
-                    docker_push(rel, image_id, name)
+                    docker_push(rel, name)
                     print("-------------" + name + " :  Image Pushed ------------")
                     
                     releaseLog = open("releaseCompletion.log", "a+")
@@ -110,20 +101,4 @@ for browser in browser_data:
 
             # Clean docker images
             execute_shell_command(docker_command + " system prune --all --force")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
